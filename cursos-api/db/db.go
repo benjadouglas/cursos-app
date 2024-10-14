@@ -2,8 +2,6 @@ package db
 
 import (
 	"context"
-	"cursos-api/model"
-	"fmt"
 	"log"
 	"os"
 
@@ -12,7 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Init() {
+var client *mongo.Client
+
+func Connect() *mongo.Client {
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
@@ -30,12 +30,5 @@ func Init() {
 			panic(err)
 		}
 	}()
-
-	coll := client.Database("db").Collection("cursos")
-	newCourse := model.Curso{Nombre: "Rust", Precio: 14.21}
-	result, err := coll.InsertOne(context.TODO(), newCourse)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Document inserted with ID: %s\n", result.InsertedID)
+	return client
 }
