@@ -1,9 +1,14 @@
 package main
 
-func main() {
-	println(some(2))
+type Some struct {
+	what int
+	is   string
 }
 
-func some(num int) int {
-	return num + 2
+func main() {
+	println(some(909090909090909090))
+}
+
+func some(num int64) int64 {
+	return num * 13212412412
 }
