@@ -23,12 +23,17 @@ func Connect() *mongo.Client {
 	clientOptions := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		panic(err)
+		log.Fatal("⛒ Connection Failed to Database")
+		log.Fatal(err)
 	}
-	defer func() {
-		if err = client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+	err = client.Ping(context.TODO(), nil)
+
+	if err != nil {
+		log.Fatal("⛒ Connection Failed to Database")
+		log.Fatal(err)
+	}
+
+	log.Print("⛁ Conected to database")
+
 	return client
 }
