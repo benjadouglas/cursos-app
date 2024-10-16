@@ -37,3 +37,9 @@ func Connect() *mongo.Client {
 
 	return client
 }
+
+func Close() {
+	if err := client.Disconnect(context.TODO()); err != nil {
+		log.Printf("Error al desconectar de MongoDB: %v", err)
+	}
+}
