@@ -2,11 +2,13 @@ package rabbit
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"os"
 	"time"
 
 	"cursos-api/client/cursos"
+	"cursos-api/model"
 
 	"github.com/joho/godotenv"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -66,19 +68,47 @@ func Migrate() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	for _, x := range _cursos {
-
-		var err error
-		err = Channel.PublishWithContext(ctx,
+	for _, curso := range _cursos {
+		jsonData, err1 := json.Marshal(curso)
+		if err1 != nil {
+			log.Printf("Error marshaling curso to JSON: %v", err1)
+			continue
+		}
+		var err2 error
+		err2 = Channel.PublishWithContext(ctx,
 			"",             // exchange
 			"cursos_queue", // routing key
 			false,          // mandatory
 			false,          // immediate
 			amqp.Publishing{
 				ContentType: "application/json",
-				Body:        []byte(x),
+				Body:        []byte(jsonData),
 			})
-		failOnError(err, "Failed to publish a message")
-		log.Printf(" [x] Sent %s\n", x)
+		failOnError(err2, "Failed to publish a message")
+		log.Printf(" [x] Sent %s\n", jsonData)
 	}
+}
+
+func Publish(curso model.Curso) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var err1 error
+	jsonData, err1 := json.Marshal(curso)
+	if err1 != nil {
+		failOnError(err1, "Error marshaling curso to Json")
+	}
+
+	var err2 error
+	err2 = Channel.PublishWithContext(ctx,
+		"",             // exchange
+		"cursos_queue", // routing key
+		false,          // mandatory
+		false,          // immediate
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        []byte(jsonData),
+		})
+	failOnError(err2, "Failed to publish message")
+	log.Printf(" [x] Sent %s\n", jsonData)
 }
