@@ -2,4 +2,6 @@ module search-api
 
 go 1.22.3
 
-require github.com/rabbitmq/amqp091-go v1.10.0
+require github.com/stevenferrer/solr-go v0.3.4
+
+require github.com/stretchr/testify v1.9.0 // indirect
