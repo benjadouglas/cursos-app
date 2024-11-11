@@ -5,8 +5,3 @@ type Curso struct {
 	Nombre []string  `json:"Nombre"`
 	Precio []float64 `json:"Precio"`
 }
-
-type CursoNew struct {
-	Operation string `json:"operation"`
-	CursoId   string `json:"curso_id"`
-}

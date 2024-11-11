@@ -40,8 +40,7 @@ func Connect() {
 	Channel, err2 = Connection.Channel()
 	failOnError(err2, "Failed to open a channel")
 
-	var err3 error
-	_, err3 = Channel.QueueDeclare(
+	_, err3 := Channel.QueueDeclare(
 		"cursos_queue", // name
 		false,          // durable
 		false,          // delete when unused
@@ -74,8 +73,8 @@ func Migrate() {
 			log.Printf("Error marshaling curso to JSON: %v", err1)
 			continue
 		}
-		var err2 error
-		err2 = Channel.PublishWithContext(ctx,
+
+		err2 := Channel.PublishWithContext(ctx,
 			"",             // exchange
 			"cursos_queue", // routing key
 			false,          // mandatory
@@ -93,14 +92,12 @@ func Publish(curso model.Curso) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	var err1 error
 	jsonData, err1 := json.Marshal(curso)
 	if err1 != nil {
 		failOnError(err1, "Error marshaling curso to Json")
 	}
 
-	var err2 error
-	err2 = Channel.PublishWithContext(ctx,
+	err2 := Channel.PublishWithContext(ctx,
 		"",             // exchange
 		"cursos_queue", // routing key
 		false,          // mandatory
