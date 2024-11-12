@@ -39,9 +39,12 @@ func (searchEngine Solr) Search(ctx context.Context, query string, limit int, of
 	var coursesList []Dao.Curso
 	for _, doc := range resp.Response.Documents {
 		course := Dao.Curso{
-			Id:     getStringField(doc, "Id"),
-			Nombre: []string{getStringField(doc, "Nombre")},
-			Precio: []float64{getFloatField(doc, "Precio")},
+			Id:        getStringField(doc, "id"),
+			Nombre:    getStringField(doc, "Nombre"),
+			Precio:    getFloatField(doc, "Precio"),
+			Profesor:  getStringField(doc, "Profesor"),
+			Capacidad: getIntField(doc, "Capacidad"),
+			Duracion:  getStringField(doc, "Duracion"),
 		}
 		coursesList = append(coursesList, course)
 	}
@@ -51,13 +54,16 @@ func (searchEngine Solr) Search(ctx context.Context, query string, limit int, of
 
 func (searchEngine Solr) Update(ctx context.Context, curso Dao.Curso) error {
 	doc := map[string]interface{}{
-		"Id":     curso.Id,
-		"Nombre": curso.Nombre,
-		"Precio": curso.Precio,
+		"Id":        curso.Id,
+		"Nombre":    curso.Nombre,
+		"Precio":    curso.Precio,
+		"Profesor":  curso.Profesor,
+		"Capacidad": curso.Capacidad,
+		"Duracion":  curso.Duracion,
 	}
 
 	updateRequest := map[string]interface{}{
-		"add": []interface{}{doc}, // Use "add" with a list of documents
+		"add": []interface{}{doc},
 	}
 
 	body, err := json.Marshal(updateRequest)
@@ -81,16 +87,65 @@ func (searchEngine Solr) Update(ctx context.Context, curso Dao.Curso) error {
 }
 
 func (searchEngine Solr) Delete(ctx context.Context, id string) error {
+	docToDelete := map[string]interface{}{
+		"delete": map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	body, err := json.Marshal(docToDelete)
+	if err != nil {
+		return fmt.Errorf("error marshaling curso document: %w", err)
+	}
+
+	resp, err := searchEngine.Client.Update(ctx, searchEngine.Collection, solr.JSON, bytes.NewReader(body))
+	if err != nil {
+		return fmt.Errorf("error deleting curso: %w", err)
+	}
+	if resp.Error != nil {
+		return fmt.Errorf("failed to delete curso: %v", resp.Error)
+	}
+	if err := searchEngine.Client.Commit(ctx, searchEngine.Collection); err != nil {
+		return fmt.Errorf("error committing changes to Solr: %w", err)
+	}
 
 	return nil
 }
 
 func (searchEngine Solr) Index(ctx context.Context, curso Dao.Curso) (string, error) {
+	doc := map[string]interface{}{
+		"id":        curso.Id,
+		"Nombre":    curso.Nombre,
+		"Precio":    curso.Precio,
+		"Profesor":  curso.Profesor,
+		"Capacidad": curso.Capacidad,
+		"Duracion":  curso.Duracion,
+	}
 
-	return "", nil
+	indexRequest := map[string]interface{}{
+		"add": []interface{}{doc},
+	}
+
+	body, err := json.Marshal(indexRequest)
+	if err != nil {
+		return "", fmt.Errorf("error marshaling curso document: %w", err)
+	}
+
+	resp, err := searchEngine.Client.Update(ctx, searchEngine.Collection, solr.JSON, bytes.NewReader(body))
+	if err != nil {
+		return "", fmt.Errorf("error indexing curso: %w", err)
+	}
+	if resp.Error != nil {
+		return "", fmt.Errorf("failed to index curso: %v", resp.Error)
+	}
+
+	if err := searchEngine.Client.Commit(ctx, searchEngine.Collection); err != nil {
+		return "", fmt.Errorf("error committing changes to Solr: %w", err)
+	}
+
+	return curso.Id, nil
 }
 
-// Helper function to safely get string fields from the document
 func getStringField(doc map[string]interface{}, field string) string {
 	if val, ok := doc[field].(string); ok {
 		return val
@@ -103,7 +158,6 @@ func getStringField(doc map[string]interface{}, field string) string {
 	return ""
 }
 
-// Helper function to safely get float64 fields from the document
 func getFloatField(doc map[string]interface{}, field string) float64 {
 	if val, ok := doc[field].(float64); ok {
 		return val
@@ -114,4 +168,16 @@ func getFloatField(doc map[string]interface{}, field string) float64 {
 		}
 	}
 	return 0.0
+}
+
+func getIntField(doc map[string]interface{}, field string) int {
+	if val, ok := doc[field].(float64); ok {
+		return int(val)
+	}
+	if val, ok := doc[field].([]interface{}); ok && len(val) > 0 {
+		if floatVal, ok := val[0].(float64); ok {
+			return int(floatVal)
+		}
+	}
+	return 0
 }

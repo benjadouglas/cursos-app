@@ -1,11 +1,12 @@
 package main
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 
-	"cursos-api/db"
-	"cursos-api/rabbit"
-	"cursos-api/router"
+	controllers "cursos-api/controller/cursos"
+	queues "cursos-api/rabbit"
+	repositories "cursos-api/repo/cursos"
+	services "cursos-api/services/cursos"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,15 +19,35 @@ func failOnError(err error, msg string) {
 
 func main() {
 	// mongo setup
-	defer db.Close()
+	//  MONGODB_URI="mongodb://root:root@localhost:27017"
+	mainRepo := repositories.NewMongo(repositories.MongoConfig{
+		Host:       "localhost",
+		Port:       "27017",
+		Username:   "root",
+		Password:   "root",
+		Database:   "cursos-api",
+		Collection: "cursos",
+	})
 
-	// rabbit setup
-	rabbit.Connect()
-	defer rabbit.Close()
-	rabbit.Migrate()
+	eventsQueue := queues.NewRabbit(queues.RabbitConfig{
+		Host:      "localhost",
+		Port:      "5672",
+		Username:  "guest",
+		Password:  "guest",
+		QueueName: "cursos_queue",
+	})
 
-	// routing setup
-	engine := gin.New()
-	router.MapUrls(engine)
-	engine.Run(":8080")
+	service := services.NewService(mainRepo, eventsQueue)
+
+	controller := controllers.NewController(service)
+
+	router := gin.Default()
+	router.GET("/cursos/:id", controller.GetCursoById)
+	router.POST("/cursos", controller.Create)
+	router.PUT("/cursos/:id", controller.Update)
+	router.DELETE("/cursos/:id", controller.Delete)
+	if err := router.Run(":8084"); err != nil {
+		log.Fatalf("error running application: %v", err)
+	}
+
 }

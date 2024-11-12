@@ -2,8 +2,9 @@
 
 ## Routes
 
-- [ ] GET `/cursos`
+- [x] GET `/cursos`
 - [ ] POST `/cursos`
+  - Manejar el servicio de get cursos `http`
 
 ## Model
 

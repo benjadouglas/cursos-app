@@ -1,111 +1,71 @@
-package rabbit
+package queues
 
 import (
-	"context"
+	domain "cursos-api/domain/cursos"
 	"encoding/json"
+	"fmt"
 	"log"
-	"os"
-	"time"
 
-	"cursos-api/client/cursos"
-	"cursos-api/model"
-
-	"github.com/joho/godotenv"
-	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/streadway/amqp"
 )
 
-var Connection *amqp.Connection
-var Channel *amqp.Channel
+type RabbitConfig struct {
+	Host      string
+	Port      string
+	Username  string
+	Password  string
+	QueueName string
+}
 
-func failOnError(err error, msg string) {
+type Rabbit struct {
+	connection *amqp.Connection
+	channel    *amqp.Channel
+	queue      amqp.Queue
+}
+
+func NewRabbit(config RabbitConfig) Rabbit {
+	connection, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/", config.Username, config.Password, config.Host, config.Port))
 	if err != nil {
-		log.Panicf("%s: %s", msg, err)
+		log.Fatalf("error getting Rabbit connection: %v", err)
+	}
+	channel, err := connection.Channel()
+	if err != nil {
+		log.Fatalf("error creating Rabbit channel: %v", err)
+	}
+	queue, err := channel.QueueDeclare(config.QueueName, false, false, false, false, nil)
+	return Rabbit{
+		connection: connection,
+		channel:    channel,
+		queue:      queue,
 	}
 }
 
-func Connect() {
-	if err := godotenv.Load(); err != nil {
-		log.Println("No se encontró el archivo .env")
+func (queue Rabbit) Publish(cursoNew domain.CursoNew) error {
+	bytes, err := json.Marshal(cursoNew)
+	if err != nil {
+		return fmt.Errorf("error marshaling Rabbit cursoNew: %w", err)
 	}
-	uri := os.Getenv("RABBITMQ_URI")
-	if uri == "" {
-		log.Fatal("Debes establecer la variable de entorno 'RABBITMQ_URI'")
-	}
-
-	var err1 error
-	Connection, err1 = amqp.Dial(uri)
-	failOnError(err1, "Failed to connect to RabbitMQ")
-
-	var err2 error
-	Channel, err2 = Connection.Channel()
-	failOnError(err2, "Failed to open a channel")
-
-	_, err3 := Channel.QueueDeclare(
-		"cursos_queue", // name
-		false,          // durable
-		false,          // delete when unused
-		false,          // exclusive
-		false,          // no-wait
-		nil,            // arguments
-	)
-	failOnError(err3, "Failed to declare a queue")
-}
-
-func Close() {
-	if err := Channel.Close(); err != nil {
-		log.Printf("Error al cerrar el canal: %v", err)
-	}
-	if err := Connection.Close(); err != nil {
-		log.Printf("Error al cerrar la conexión: %v", err)
-	}
-}
-
-func Migrate() {
-	_cursos, err := cursos.GetCursos()
-	failOnError(err, "Failed fetching cursos")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	for _, curso := range _cursos {
-		jsonData, err1 := json.Marshal(curso)
-		if err1 != nil {
-			log.Printf("Error marshaling curso to JSON: %v", err1)
-			continue
-		}
-
-		err2 := Channel.PublishWithContext(ctx,
-			"",             // exchange
-			"cursos_queue", // routing key
-			false,          // mandatory
-			false,          // immediate
-			amqp.Publishing{
-				ContentType: "application/json",
-				Body:        []byte(jsonData),
-			})
-		failOnError(err2, "Failed to publish a message")
-		log.Printf(" [x] Sent %s\n", jsonData)
-	}
-}
-
-func Publish(curso model.Curso) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	jsonData, err1 := json.Marshal(curso)
-	if err1 != nil {
-		failOnError(err1, "Error marshaling curso to Json")
-	}
-
-	err2 := Channel.PublishWithContext(ctx,
-		"",             // exchange
-		"cursos_queue", // routing key
-		false,          // mandatory
-		false,          // immediate
+	log.Printf("Publishing message to RabbitMQ: %s", string(bytes))
+	if err := queue.channel.Publish(
+		"",
+		queue.queue.Name,
+		false,
+		false,
 		amqp.Publishing{
 			ContentType: "application/json",
-			Body:        []byte(jsonData),
-		})
-	failOnError(err2, "Failed to publish message")
-	log.Printf(" [x] Sent %s\n", jsonData)
+			Body:        bytes,
+		}); err != nil {
+		return fmt.Errorf("error publishing to Rabbit: %w", err)
+	}
+	return nil
+}
+
+// Close cleans up the RabbitMQ resources
+func (queue Rabbit) Close() {
+	if err := queue.channel.Close(); err != nil {
+		log.Printf("error closing Rabbit channel: %v", err)
+	}
+	if err := queue.connection.Close(); err != nil {
+		log.Printf("error closing Rabbit connection: %v", err)
+	}
 }

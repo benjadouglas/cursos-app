@@ -37,13 +37,11 @@ func (repository HTTP) GetCursoByID(ctx context.Context, id string) (cursosModel
 		return cursosModel.Curso{}, fmt.Errorf("Failed to fetch curso (%s): received status code %d\n", id, resp.StatusCode)
 	}
 
-	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return cursosModel.Curso{}, fmt.Errorf("Error reading response body for curso (%s): %w\n", id, err)
 	}
 
-	// Unmarshal the curso details into the curso struct
 	var curso cursosModel.Curso
 	if err := json.Unmarshal(body, &curso); err != nil {
 		return cursosModel.Curso{}, fmt.Errorf("Error unmarshaling curso data (%s): %w\n", id, err)

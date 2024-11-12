@@ -25,10 +25,8 @@ func NewController(service Service) Controller {
 }
 
 func (controller Controller) Search(c *gin.Context) {
-	// Parse query from URL
 	query := c.Query("q")
 
-	// Parse offset from URL
 	offset, err := strconv.Atoi(c.Query("offset"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -37,7 +35,6 @@ func (controller Controller) Search(c *gin.Context) {
 		return
 	}
 
-	// Parse limit from URL
 	limit, err := strconv.Atoi(c.Query("limit"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -46,15 +43,13 @@ func (controller Controller) Search(c *gin.Context) {
 		return
 	}
 
-	// Invoke service
-	hotels, err := controller.service.Search(c.Request.Context(), query, offset, limit)
+	cursos, err := controller.service.Search(c.Request.Context(), query, offset, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": fmt.Sprintf("error searching hotels: %s", err.Error()),
+			"error": fmt.Sprintf("error searching cursos: %s", err.Error()),
 		})
 		return
 	}
 
-	// Send response
-	c.JSON(http.StatusOK, hotels)
+	c.JSON(http.StatusOK, cursos)
 }

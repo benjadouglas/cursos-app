@@ -1,10 +1,11 @@
 package main
 
 import (
-	"context"
-	"fmt"
+	"log"
+	"search-api/client/queues"
 	controllers "search-api/controllers/search"
 	repo "search-api/repositories"
+	services "search-api/services/search"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,26 +15,31 @@ func main() {
 		BaseURL:    "http://localhost:8983",
 		Collection: "cursos",
 	}
-	solaris := repo.NewSolr(config)
 
-	cursos, err := solaris.Search(context.TODO(), "Id:2", 5, 10)
-	if err != nil {
-
-	}
-	// Services
-	fmt.Printf("%+v", cursos)
-
-	// Hotels API
-	cursosAPI := repo.NewHTTP(repo.HTTPConfig{
-		Host: "cursos-api",
-		Port: "8081",
+	eventsQueue := queues.NewRabbit(queues.RabbitConfig{
+		Host:      "localhost",
+		Port:      "5672",
+		Username:  "guest",
+		Password:  "guest",
+		QueueName: "cursos_queue",
 	})
 
-	service := services.NewService(solaris, cursosAPI)
+	solaris := repo.NewSolr(config)
+
+	cursosAPI := repo.NewHTTP(repo.HTTPConfig{
+		Host: "localhost",
+		Port: "8084",
+	})
+
+	service := services.NewService(solaris, cursosAPI, eventsQueue)
 
 	controller := controllers.NewController(service)
 
+	if err := eventsQueue.StartConsumer(service.HandleCursoNew); err != nil {
+		log.Fatalf("Error running consumer: %v", err)
+	}
+
 	router := gin.Default()
 	router.GET("/search", controller.Search)
-	// fmt.Printf("Courses found: %+v\n", coursesList)
+	router.Run()
 }

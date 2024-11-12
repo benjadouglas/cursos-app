@@ -1,11 +1,20 @@
-## Checks
+# DTO
+
+- [ ] Agregar dto donde corresponda
+
+# Mongo rework
+
+- El unico servicio que usa mongo es client por ahora
+- Vamos a borrar a mongo y vamos a hacelro de la manera que tiene el emi
+
+# Checks
 
 - [x] Get rabbitmq working
   - [x] Connect to localhost port http://localhost:5672/
   - ~Create a init() function that will return the rabbit instance?~
   - [x] Instead we made a variable that lives in the package rabbit
 
-## TODO
+# TODO
 
 - The rabbit instance will send two types of requests to the queue:
 
@@ -16,3 +25,5 @@
 - To send all the existing documents(?)
 
 docker run --hostname rabbitmq --name rabbit-mq -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+
+# Preguntar mañana al emi porque solo pasa por rabbit el id del curso?

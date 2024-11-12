@@ -1,8 +1,39 @@
-## Queries
+# Queries
 
 Search for Id:
 
 - curl http://localhost:8983/solr/cursos/query\?q\=Id:2
+- GET http://localhost:8080/search?q=Id:2&offset=0&limit=10
+
+# Como se maneja un nuevo curso?
+
+- Llega un nuevo mensaje de rabbit que le pasa el tipo de operacion y el id
+- Desde `search-api` hago un request a `cursos-api` que me pase la informacion de ese curso con ese id
+- Alli `cursos-api` me pasa toda la informacion de ese curso
+
+---
+
+# Como busco un curso mediante api?
+
+1. Usando comodín al final (sufijo):
+
+```go
+// En la función Search, el query sería algo como:
+"Nombre:rus*" // Encontrará palabras que empiecen con "rus"
+
+```
+
+2. Usando comodines en ambos lados:
+
+```go
+"Nombre:*rus*"  // Encontrará palabras que contengan "rus" en cualquier parte
+```
+
+3. Usando el operador fuzzy (~):
+
+```go
+"Nombre:rust~"  // Encontrará palabras similares a "rust" con algunas variaciones
+```
 
 ---
 
