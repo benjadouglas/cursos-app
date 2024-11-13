@@ -5,17 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc5a8252-6f01-45bf-971e-e1b5bb33b903" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../cursos-api/client/cursos/cursos_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/../cursos-api/client/cursos/cursos_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cursos-api/controller/cursos/cursos_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/../cursos-api/controller/cursos/cursos_controller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cursos-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../cursos-api/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cursos-api/rabbit/rabbit.go" beforeDir="false" afterPath="$PROJECT_DIR$/../cursos-api/rabbit/rabbit.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cursos-api/router/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/../cursos-api/router/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cursos-api/tmp/main" beforeDir="false" afterPath="$PROJECT_DIR$/../cursos-api/tmp/main" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TODO.md" beforeDir="false" afterPath="$PROJECT_DIR$/TODO.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/solr.md" beforeDir="false" afterPath="$PROJECT_DIR$/solr.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/main" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/main" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
