@@ -30,6 +30,7 @@ func NewController(service Service) Controller {
 func (controller Controller) GetCursoById(ctx *gin.Context) {
 	// Validate ID param
 	cursoID := strings.TrimSpace(ctx.Param("id"))
+	cursoID = strings.TrimPrefix(cursoID, "id:") // Add this line to remove "id:" prefix
 
 	// Get curso by ID using the service
 	curso, err := controller.service.GetCursoByID(ctx.Request.Context(), cursoID)
