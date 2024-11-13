@@ -1,12 +1,13 @@
 package users
 
 import (
-	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"os"
 	"time"
 	"usuarios-api/model"
 	"usuarios-api/utils"
+
+	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/gin-gonic/gin"
 )

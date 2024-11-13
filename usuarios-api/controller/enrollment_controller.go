@@ -1,10 +1,15 @@
 package users
 
 import (
-	"github.com/gin-gonic/gin"
+	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 	"usuarios-api/model"
+
+	log "github.com/sirupsen/logrus"
+
+	"github.com/gin-gonic/gin"
 )
 
 // CreateEnrollment crea una nueva inscripción
@@ -15,6 +20,7 @@ func CreateEnrollment(c *gin.Context) {
 		return
 	}
 
+	log.Printf("Json data %v", enrollment)
 	// Verificar si el usuario existe
 	var user model.Usuario
 	if err := db.First(&user, enrollment.Id).Error; err != nil {
@@ -40,19 +46,34 @@ func CreateEnrollment(c *gin.Context) {
 
 // GetEnrollmentsByUserID obtiene todas las inscripciones de un usuario
 func GetEnrollmentsByUserID(c *gin.Context) {
-	userID, err := strconv.Atoi(c.Param("userId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
+	userID := strings.TrimSpace(c.Param("id"))
+	userID = strings.TrimPrefix(userID, "id:") // Add this line to remove "id:" prefix
+	log.Printf("%v", userID)
 
 	var enrollments []model.Enrollment
-	if err := db.Where("user_id = ?", userID).Find(&enrollments).Error; err != nil {
+	if err := db.Where("id = ?", userID).Find(&enrollments).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve enrollments"})
 		return
 	}
 
-	c.JSON(http.StatusOK, enrollments)
+	courses := make([]interface{}, 0)
+	for _, enrollment := range enrollments {
+		resp, err := http.Get("http://localhost:8084/cursos/id:" + enrollment.Id_cursos)
+		if err != nil {
+			log.Printf("Error getting course: %v", err)
+			continue
+		}
+		defer resp.Body.Close()
+
+		var course interface{}
+		if err := json.NewDecoder(resp.Body).Decode(&course); err != nil {
+			log.Printf("Error decoding response: %v", err)
+			continue
+		}
+		courses = append(courses, course)
+	}
+	log.Printf("cursos:\n %v", courses)
+	c.JSON(http.StatusOK, courses)
 }
 
 // DeleteEnrollment elimina una inscripción
