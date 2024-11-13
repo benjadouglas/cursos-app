@@ -1,32 +1,58 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Cursos.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Cursos.css";
 
 const Cursos = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [cursos, setCursos] = useState([]);
 
-    const cursos = [
-        { id: 1, nombre: "Curso de Matemáticas", descripcion: "Aprende matemáticas desde cero", puntuacion: 4.5 },
-        { id: 2, nombre: "Curso de Historia", descripcion: "Historia universal", puntuacion: 4.2 },
-        { id: 3, nombre: "Curso de Ciencias", descripcion: "Explora el mundo de la ciencia", puntuacion: 4.7 },
-    ];
+  useEffect(() => {
+    const fetchCursos = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/search?q=Id:*&offset=0&limit=10000",
+          {
+            method: "GET",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
 
-    const goToDetalle = (curso) => {
-        navigate('/detalle', { state: { curso } });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setCursos(data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setCursos([]);
+      }
     };
 
-    return (
-        <div className="cursos-lista">
-            {cursos.map((curso) => (
-                <div key={curso.id} className="curso-item">
-                    <h3>{curso.nombre}</h3>
-                    <p>{curso.descripcion}</p>
-                    <p>Puntuación: {curso.puntuacion}</p>
-                    <button onClick={() => goToDetalle(curso)} className="detalle-button">Ver Detalle</button>
-                </div>
-            ))}
+    fetchCursos();
+  }, []);
+
+  const goToDetalle = (curso) => {
+    navigate("/detalle", { state: { curso } });
+  };
+
+  return (
+    <div className="cursos-lista">
+      {cursos.map((curso) => (
+        <div key={curso.id} className="curso-item">
+          <h3>{curso.Nombre}</h3>
+          <p>{curso.Precio}</p>
+          <p>Capacidad: {curso.Capacidad}</p>
+          <button onClick={() => goToDetalle(curso)} className="detalle-button">
+            Ver Detalle
+          </button>
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 export default Cursos;

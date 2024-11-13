@@ -1,34 +1,91 @@
-import React, { useState } from 'react';
-import './Registro.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Registro.css";
 
-const Register = ({ onRegister }) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+const Registro = () => {
+  const [formData, setFormData] = useState({
+    nombre: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const handleRegister = () => {
-        onRegister(username, password);
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    return (
-        <div className="register-container">
-            <h2 className="register-title">Registro</h2>
-            <input
-                type="text"
-                placeholder="Usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="register-input"
-            />
-            <input
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="register-input"
-            />
-            <button onClick={handleRegister} className="register-button">Registrarse</button>
-        </div>
-    );
+    // Validaciones básicas
+    if (!formData.nombre || !formData.email || !formData.password) {
+      setError("Todos los campos son obligatorios");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8085/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Error en el registro");
+      }
+
+      // Registro exitoso
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
+      console.error("Error durante el registro:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="registro-container">
+      <h2 className="registro-title">Registro de Usuario</h2>
+      {error && <div className="registro-error">{error}</div>}
+      <form onSubmit={handleSubmit} className="registro-form">
+        <input
+          type="text"
+          name="nombre"
+          value={formData.nombre}
+          onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+          className="registro-input"
+          placeholder="Nombre"
+        />
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          className="registro-input"
+          placeholder="Email"
+        />
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
+          className="registro-input"
+          placeholder="Contraseña"
+        />
+        <button type="submit" className="registro-button" disabled={loading}>
+          {loading ? "Registrando..." : "Registrarse"}
+        </button>
+      </form>
+    </div>
+  );
 };
 
-export default Register;
+export default Registro;
