@@ -14,8 +14,10 @@ import (
 func main() {
 	config := repo.SolrConfig{
 		BaseURL:    "http://localhost:8983",
-		Collection: "cursos",
+		Collection: "courses",
 	}
+
+	solaris := repo.NewSolr(config)
 
 	eventsQueue := queues.NewRabbit(queues.RabbitConfig{
 		Host:      "localhost",
@@ -24,8 +26,6 @@ func main() {
 		Password:  "guest",
 		QueueName: "cursos_queue",
 	})
-
-	solaris := repo.NewSolr(config)
 
 	cursosAPI := repo.NewHTTP(repo.HTTPConfig{
 		Host: "localhost",

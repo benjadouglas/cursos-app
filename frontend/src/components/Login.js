@@ -41,7 +41,7 @@ const Login = ({ onLogin }) => {
         onLogin(data.user);
       } else {
         // Si no hay función onLogin, redirigir directamente
-        window.location.href = "/cursos";
+        window.location.href = "/miscursos";
       }
     } catch (err) {
       if (err.message === "Failed to fetch") {

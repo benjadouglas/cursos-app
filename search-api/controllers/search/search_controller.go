@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type Service interface {
@@ -43,6 +44,7 @@ func (controller Controller) Search(c *gin.Context) {
 		return
 	}
 
+	logrus.Printf("query: %v", query)
 	cursos, err := controller.service.Search(c.Request.Context(), query, offset, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

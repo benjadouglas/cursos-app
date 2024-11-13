@@ -5,7 +5,9 @@ import (
 	"cursos-api/model"
 	"fmt"
 	"log"
+	"strings"
 
+	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -55,6 +57,10 @@ func NewMongo(config MongoConfig) Mongo {
 
 func (repository Mongo) GetCursoByID(ctx context.Context, id string) (model.Curso, error) {
 	// Get from MongoDB
+	logrus.Printf("HERHERR: %s", id)
+	// Trim the "id:" prefix if present
+	id = strings.TrimPrefix(id, "id:")
+	logrus.Printf("Trimmed ID: %s", id)
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return model.Curso{}, fmt.Errorf("error converting id to mongo ID: %w", err)

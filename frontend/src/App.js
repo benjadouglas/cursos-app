@@ -15,7 +15,7 @@ const App = () => {
 
   const handleLogin = (userData) => {
     setUser(userData);
-    window.location.href = "/cursos";
+    window.location.href = "/miscursos";
   };
 
   return (

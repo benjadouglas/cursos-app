@@ -42,7 +42,7 @@ const Cursos = () => {
   return (
     <div className="cursos-lista">
       {cursos.map((curso) => (
-        <div key={curso.id} className="curso-item">
+        <div key={curso.Id} className="curso-item">
           <h3>{curso.Nombre}</h3>
           <p>{curso.Precio}</p>
           <p>Capacidad: {curso.Capacidad}</p>

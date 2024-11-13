@@ -30,9 +30,9 @@ func CreateEnrollment(c *gin.Context) {
 
 	// Verificar si ya existe la inscripción
 	var existingEnrollment model.Enrollment
-	if err := db.Where("user_id = ? AND course_id = ?", enrollment.Id, enrollment.Id_cursos).
+	if err := db.Where("id = ? AND id_cursos = ?", enrollment.Id, enrollment.Id_cursos).
 		First(&existingEnrollment).Error; err == nil {
-		c.JSON(http.StatusConflict, gin.H{"error": "Enrollment already exists"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Enrollment already exists"})
 		return
 	}
 

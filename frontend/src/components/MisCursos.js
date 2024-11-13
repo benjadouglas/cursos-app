@@ -35,22 +35,9 @@ const MisCursos = () => {
         }
 
         const enrollments = await enrollmentsResponse.json();
+        console.log(enrollments);
 
-        // 2. Para cada inscripción, obtener los detalles del curso
-        const cursosPromises = enrollments.map(async (enrollment) => {
-          const cursoResponse = await fetch(
-            `http://localhost:8080/api/cursos/${enrollment.id_cursos}`,
-          );
-          if (!cursoResponse.ok) {
-            throw new Error(
-              `Error al obtener el curso ${enrollment.id_cursos}`,
-            );
-          }
-          return cursoResponse.json();
-        });
-
-        const cursosData = await Promise.all(cursosPromises);
-        setCursos(cursosData);
+        setCursos(enrollments);
       } catch (err) {
         setError(err.message);
         console.error("Error:", err);
@@ -79,14 +66,11 @@ const MisCursos = () => {
         <div className="cursos-grid">
           {cursos.map((curso) => (
             <div key={curso._id} className="curso-card">
-              <img
-                src={curso.imagen}
-                alt={curso.nombre}
-                className="curso-imagen"
-              />
               <div className="curso-info">
-                <h3 className="curso-titulo">{curso.nombre}</h3>
-                <p className="curso-descripcion">{curso.descripcion}</p>
+                <h3 className="curso-titulo">{curso.Nombre}</h3>
+                <p className="curso-descripcion">{curso.Precio}</p>
+                <p>{curso.Capacidad}</p>
+                <p classname="curso-profesor">{curso.Profesor}</p>
                 <button
                   className="ver-curso-btn"
                   onClick={() => (window.location.href = `/curso/${curso._id}`)}

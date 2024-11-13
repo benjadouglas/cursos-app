@@ -7,6 +7,7 @@ import (
 	"fmt"
 	Dao "search-api/dao"
 
+	"github.com/sirupsen/logrus"
 	"github.com/stevenferrer/solr-go"
 )
 
@@ -29,9 +30,12 @@ func NewSolr(config SolrConfig) Solr {
 
 func (searchEngine Solr) Search(ctx context.Context, query string, limit int, offset int) ([]Dao.Curso, error) {
 
+	logrus.Printf(query)
 	solrQuery := solr.NewQuery(query).Limit(limit).Offset(offset)
-	resp, err := searchEngine.Client.Query(ctx, "cursos", solrQuery)
+	resp, err := searchEngine.Client.Query(ctx, "courses", solrQuery)
 
+	logrus.Printf("%v", resp)
+	logrus.Printf("%v", err)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +43,7 @@ func (searchEngine Solr) Search(ctx context.Context, query string, limit int, of
 	var coursesList []Dao.Curso
 	for _, doc := range resp.Response.Documents {
 		course := Dao.Curso{
-			Id:        getStringField(doc, "id"),
+			Id:        getStringField(doc, "Id"),
 			Nombre:    getStringField(doc, "Nombre"),
 			Precio:    getFloatField(doc, "Precio"),
 			Profesor:  getStringField(doc, "Profesor"),

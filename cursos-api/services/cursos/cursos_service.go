@@ -35,7 +35,6 @@ func (service Service) GetCursoByID(ctx context.Context, id string) (domain.Curs
 	if err != nil {
 		return domain.Curso{}, fmt.Errorf("error getting curso from repository: %v", err)
 	}
-
 	return domain.Curso{
 		Id:        curso.ID,
 		Nombre:    curso.Nombre,

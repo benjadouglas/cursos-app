@@ -33,7 +33,7 @@ func Login(c *gin.Context) {
 
 	// Verify password
 	if !utils.CheckPasswordHash(loginReq.Password, user.Password) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Contraseña o usuario incorrecto"})
 		return
 	}
 
