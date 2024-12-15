@@ -1,12 +1,13 @@
 package users
 
 import (
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 	"usuarios-api/model"
 	"usuarios-api/utils"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // Variable global para la base de datos
@@ -25,6 +26,7 @@ func GetAllUsers(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, users)
 }
+
 func CreateUser(c *gin.Context) {
 	var user model.Usuario
 	if err := c.ShouldBindJSON(&user); err != nil {

@@ -4,9 +4,9 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSearch = async () => {
     const response = await fetch(
-      `http://localhost:8080/search?q=Nombre:${query}&offset=0&limit=10000`,
+      `http://localhost:8983/search?q=Nombre:${query}&offset=0&limit=10000`,
     );
-    const data = await response.json();
+    const data = await respo983.json();
     onSearch(data);
   };
 
