@@ -21,8 +21,16 @@ export const actions = {
             return fail(500);
         }
         const data = await response.json();
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.user.ID); // Asumiendo que el backend devuelve el id del usuario en data.user.id
-        redirect(200, "/protected");
+        cookies.set("session", data.token, {
+            path: "/",
+            httpOnly: true,
+            maxAge: 60 * 60 * 24 * 4, // 4 days
+        });
+        cookies.set("userId", data.user.ID, {
+            path: "/",
+            httpOnly: true,
+            maxAge: 60 * 60 * 24 * 4, // 4 days
+        });
+        redirect(301, "/protected");
     },
 } satisfies Actions;
