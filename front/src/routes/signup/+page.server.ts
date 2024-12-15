@@ -4,15 +4,16 @@ import { fail, redirect } from "@sveltejs/kit";
 export const actions = {
     default: async ({ request, cookies }) => {
         const form = await request.formData();
+        const username = form.get("username") as string;
         const email = form.get("email") as string;
         const password = form.get("password") as string;
-        const response = await fetch("http://localhost:8085/api/login", {
+        const response = await fetch("http://localhost:8085/api/users", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            mode: "cors",
             body: JSON.stringify({
+                nombre: username,
                 email: email,
                 password: password,
             }),
@@ -20,9 +21,6 @@ export const actions = {
         if (!response.ok) {
             return fail(500);
         }
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.user.ID); // Asumiendo que el backend devuelve el id del usuario en data.user.id
-        redirect(200, "/protected");
+        redirect(301, "/login");
     },
 } satisfies Actions;
