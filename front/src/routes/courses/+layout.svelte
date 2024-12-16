@@ -13,7 +13,7 @@
     <header class="border-b">
         <div class="container mx-auto px-4">
             <nav class="flex items-center h-16 justify-between">
-                <a href="/protected" class="flex items-center space-x-2">
+                <a href="/courses" class="flex items-center space-x-2">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -35,13 +35,13 @@
                 <!-- Navigation Links -->
                 <div class="flex items-center space-x-2">
                     <a
-                        href="/protected"
+                        href="/courses"
                         class="text-sm font-medium hover:text-primary transition-colors"
                     >
                         Home
                     </a>
                     <a
-                        href="/protected/mycourses"
+                        href="/courses/me"
                         class="text-sm font-medium hover:text-primary transition-colors"
                     >
                         Courses

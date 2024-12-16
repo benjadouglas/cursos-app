@@ -1,13 +1,13 @@
 <script lang="ts">
     import { Input } from "$lib/components/ui/input";
-    import type { PageData } from "./$types";
+    import type { PageData, ActionData } from "./$types";
     import { Button } from "$lib/components/ui/button";
-    import { Search } from "lucide-svelte";
     import Course from "$lib/components/ui/course/+page.svelte";
+    import { enhance } from "$app/forms";
 
-    let { data }: { data: PageData } = $props();
-    console.log(data);
-    let searchQuery = $state("");
+    let { data, form }: { data: PageData; form: ActionData } = $props();
+
+    let courses = $derived(form?.courses ?? data.courses);
 </script>
 
 <div class="min-h-screen bg-background">
@@ -25,29 +25,30 @@
 
             <!-- Search Box -->
             <div class="w-full max-w-2xl mx-auto">
-                <div class="flex gap-2">
-                    <div class="relative flex-1">
-                        <Search
-                            class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                        />
-                        <Input
-                            type="text"
-                            placeholder="Search anything..."
-                            class="pl-10 h-12 text-lg"
-                            bind:value={searchQuery}
-                        />
-                    </div>
-                    <Button class="h-12 px-8">Search</Button>
-                </div>
+                <form
+                    method="POST"
+                    use:enhance
+                    action="?/update"
+                    class="flex gap-2"
+                >
+                    <Input
+                        type="text"
+                        name="search"
+                        placeholder="Search anything..."
+                        class="h-12 text-lg"
+                    />
+                    <Button type="submit" class="h-12 px-8">Search</Button>
+                </form>
             </div>
             <div
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full justify-items-center"
             >
-                {#each data.courses as item}
+                {#each courses as item}
                     <Course
                         title={item.Nombre}
                         price={item.Precio}
                         capacity={item.Capacidad}
+                        id={item.Id}
                     />
                 {/each}
             </div>

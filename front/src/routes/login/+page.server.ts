@@ -31,6 +31,6 @@ export const actions = {
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 4, // 4 days
         });
-        redirect(301, "/protected");
+        redirect(301, "/courses");
     },
 } satisfies Actions;

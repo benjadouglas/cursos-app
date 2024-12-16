@@ -2,7 +2,7 @@
     import { Button } from "$lib/components/ui/button";
     import * as Card from "$lib/components/ui/card";
 
-    let { title, price, capacity } = $props();
+    let { title, price, capacity, id } = $props();
 </script>
 
 <Card.Root class="w-[350px]">
@@ -22,6 +22,6 @@
         </div>
     </Card.Content>
     <Card.Footer class="flex justify-center">
-        <Button class="w-full">Inscribirse</Button>
+        <Button class="w-full" href="/courses/{id}">Descrpcion</Button>
     </Card.Footer>
 </Card.Root>
