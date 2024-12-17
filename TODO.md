@@ -16,16 +16,16 @@
 - [x] Desarrollo en Go siguiendo el Patrón MVC: Los microservicios están desarrollados en Go y cumplen con el patrón MVC.
 - [x] Encriptación de Datos Sensibles: Los datos sensibles (como passwords) se manejan de forma segura, siguiendo prácticas de encriptación.
 - [x] Código en Repositorio de GitHub: Todo el código se encuentra publicado en GitHub y está accesible para revisión.
+- [!] Containerización en Docker: Todos los microservicios están containerizados en Docker y se gestionan mediante Docker Compose.
+- [!] Filtrado de Resultados por Capacidad en SolR: La API de Búsqueda implementa un filtro de resultados basado en la capacidad (usuarios inscritos vs. capacidad máxima del curso u hotel).
 - [ ] Implementación de Caching Eficiente: Las capas de cache implementadas, tanto en la API de Usuarios como en la API Principal, mejoran la eficiencia del sistema y funcionan de forma estable.
 - [ ] Capa de Caché con Memcached en Usuarios: Se implementa una capa de caché usando Memcached en la API de Usuarios, optimizando la consulta de datos de usuarios.
-- [ ] Containerización en Docker: Todos los microservicios están containerizados en Docker y se gestionan mediante Docker Compose.
-- [ ] Filtrado de Resultados por Capacidad en SolR: La API de Búsqueda implementa un filtro de resultados basado en la capacidad (usuarios inscritos vs. capacidad máxima del curso u hotel).
 
 # Criterios de Evaluación - Requisitos Examen final
 
-- [!] Vistas de Administración: Se implementan nuevas vistas para la creación y actualización de cursos/hoteles, accesibles únicamente para administradores/profesores.
-- [ ] Validación de Permisos en la API de Cursos/Hoteles: API de Cursos/Hoteles valida que el usuario sea administrador antes de permitir la creación, edición de cursos/hoteles o acceso a Admin API.
-- [ ] Balanceador de Carga / Implementación de NGinX: NGinX se utiliza como balanceador de carga para distribuir el tráfico de manera eficiente entre múltiples instancias de los microservicios, garantizando alta disponibilidad y rendimiento. Se implementa correctamente en al menos 1 microservicio.
-- [ ] Gestión de Microservicios: Se desarrolla una vista exclusiva (Admin) para administradores que permite al menos visualizar las instancias de los microservicios. Idealmente también incluye 2 botones que permiten crear o eliminar instancias dinámicamente para optimizar los recursos.
-- [ ] Cobertura de Tests en la Capa de Servicios: Al menos un microservicio debe incluir una cobertura de tests completa para todas sus funcionalidades en la capa de servicios, garantizando confiabilidad.
-- [ ] Mocks para Clientes y Repositorios: Las implementaciones de clientes de al menos 1 servicio y repositorios deben incluir mocks, facilitando la prueba de las funcionalidades y reduciendo dependencias externas durante los tests.
+- [x] Vistas de Administración: Se implementan nuevas vistas para la creación y actualización de cursos/hoteles, accesibles únicamente para administradores/profesores.
+- [x] Validación de Permisos en la API de Cursos/Hoteles: API de Cursos/Hoteles valida que el usuario sea administrador antes de permitir la creación, edición de cursos/hoteles o acceso a Admin API.
+- [x] Balanceador de Carga / Implementación de NGinX: NGinX se utiliza como balanceador de carga para distribuir el tráfico de manera eficiente entre múltiples instancias de los microservicios, garantizando alta disponibilidad y rendimiento. Se implementa correctamente en al menos 1 microservicio.
+- [x] Cobertura de Tests en la Capa de Servicios: Al menos un microservicio debe incluir una cobertura de tests completa para todas sus funcionalidades en la capa de servicios, garantizando confiabilidad.
+- [!] Gestión de Microservicios: Se desarrolla una vista exclusiva (Admin) para administradores que permite al menos visualizar las instancias de los microservicios. Idealmente también incluye 2 botones que permiten crear o eliminar instancias dinámicamente para optimizar los recursos.
+- [!] Mocks para Clientes y Repositorios: Las implementaciones de clientes de al menos 1 servicio y repositorios deben incluir mocks, facilitando la prueba de las funcionalidades y reduciendo dependencias externas durante los tests.
