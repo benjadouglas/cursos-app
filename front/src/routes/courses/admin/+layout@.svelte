@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { BookDashed, Plus } from "lucide-svelte"
+    import { BookDashed, Plus, Menu } from "lucide-svelte"
     import { Button } from "$lib/components/ui/button";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     let { children } = $props();
@@ -16,8 +16,8 @@
                 <Button class="h-8" href="/courses/admin/create"><Plus strokeWidth={4} size={16} class="mr-2"/> add a course</Button>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
-                        <Button variant="outline" size="icon" class="w-16">
-                            Menu
+                        <Button variant="outline" size="icon" class="w-10">
+                            <Menu size={20} />
                         </Button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>

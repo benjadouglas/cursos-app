@@ -3,7 +3,8 @@
     import { Input } from "$lib/components/ui/input";
     import { enhance } from "$app/forms";
     import { Button } from "$lib/components/ui/button";
-    import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
+    import { Checkbox } from "$lib/components/ui/checkbox";
+    let checked = $state(false);
 </script>
 
 <div class="grid justify-center h-[100vh] content-center">
@@ -31,11 +32,13 @@
                     <p class="data-[fs-error]:text-destructive">password</p>
                     <Input name="password" type="password" />
                 </div>
+                <!-- TODO: Agregar funcionalidad al checkbox -->
                 <div
                     class="flex flex-row items-center space-x-2 space-y-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                    <Checkbox />
-                    <p class="font-normal text-center">
+                    <Checkbox bind:checked />
+                    <input type="hidden" name="check" value={checked} />
+                    <p class="font-normal text-center mt-0 h-5">
                         Check if you are a administrator
                     </p>
                 </div>

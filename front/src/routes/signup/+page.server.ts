@@ -7,6 +7,7 @@ export const actions = {
         const username = form.get("username") as string;
         const email = form.get("email") as string;
         const password = form.get("password") as string;
+        const check = form.get("check") === "true";
         const response = await fetch("http://localhost:8085/api/users", {
             method: "POST",
             headers: {
@@ -16,6 +17,7 @@ export const actions = {
                 nombre: username,
                 email: email,
                 password: password,
+                admin: check,
             }),
         });
         if (!response.ok) {

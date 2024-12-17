@@ -1,5 +1,7 @@
 <script lang="ts">
     import { BookDashed } from "lucide-svelte"
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+    import {Menu} from "lucide-svelte";
     import { Button } from "$lib/components/ui/button";
     let { children } = $props();
 </script>
@@ -12,29 +14,49 @@
                     <BookDashed/>
                     <span class="font-bold text-xl">LearnHub</span>
                 </a>
-                <div class="flex items-center space-x-2">
-                    <Button
-                        variant="link"
-                        href="/courses"
-                        class="text-sm font-medium hover:text-primary transition-colors"
-                    >
-                        Home
-                    </Button>
-                    <Button
-                        variant="link"
-                        href="/courses/me"
-                        class="text-sm font-medium hover:text-primary transition-colors"
-                    >
-                        MyCourses
-                    </Button>
-                    <Button
-                        variant="link"
-                        class="text-sm font-medium hover:text-red-500"
-
-                    >
-                        Logout
-                    </Button>
-                </div>
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                        <Button variant="outline" size="icon" class="w-10">
+                            <Menu size={20} />
+                        </Button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content>
+                        <DropdownMenu.Group>
+                            <DropdownMenu.Item>
+                                <a
+                                    href="/courses"
+                                    class="w-full text-sm font-normal hover:text-primary transition-colors"
+                                >
+                                    Home
+                                </a>
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item>
+                                <a
+                                    href="/courses/me"
+                                    class="w-full text-sm font-normal hover:text-primary transition-colors"
+                                >
+                                    My Courses
+                                </a>
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item>
+                                <a
+                                    href="/admin"
+                                    class="w-full text-sm font-normal hover:text-primary transition-colors"
+                                >
+                                    admin
+                                </a>
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Separator />
+                            <DropdownMenu.Item>
+                                <button
+                                    class="w-full text-sm font-normal hover:text-red-500 transition-colors text-left"
+                                >
+                                    Logout
+                                </button>
+                            </DropdownMenu.Item>
+                        </DropdownMenu.Group>
+                    </DropdownMenu.Content>
+                </DropdownMenu.Root>
             </nav>
         </div>
     </header>
