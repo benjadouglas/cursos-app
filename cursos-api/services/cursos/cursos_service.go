@@ -36,7 +36,7 @@ func (service Service) GetCursoByID(ctx context.Context, id string) (domain.Curs
 		return domain.Curso{}, fmt.Errorf("error getting curso from repository: %v", err)
 	}
 	return domain.Curso{
-		Id:        curso.ID,
+		Id:        curso.Id,
 		Nombre:    curso.Nombre,
 		Precio:    curso.Precio,
 		Profesor:  curso.Profesor,
@@ -47,7 +47,7 @@ func (service Service) GetCursoByID(ctx context.Context, id string) (domain.Curs
 
 func (service Service) Create(ctx context.Context, curso domain.Curso) (string, error) {
 	record := model.Curso{
-		ID:        curso.Id,
+		Id:        curso.Id,
 		Nombre:    curso.Nombre,
 		Precio:    curso.Precio,
 		Profesor:  curso.Profesor,
@@ -55,24 +55,24 @@ func (service Service) Create(ctx context.Context, curso domain.Curso) (string, 
 		Duracion:  curso.Duracion,
 	}
 
-	id, err := service.mainRepository.Create(ctx, record)
+	Id, err := service.mainRepository.Create(ctx, record)
 	if err != nil {
-		return "", fmt.Errorf("error creating hotel in main repository: %w", err)
+		return "", fmt.Errorf("error creating curso in main repository: %w", err)
 	}
-	record.ID = id
+	record.Id = Id
 	if err := service.eventsQueue.Publish(domain.CursoNew{
 		Operation: "CREATE",
-		CursoID:   id,
+		CursoID:   Id,
 	}); err != nil {
 		return "", fmt.Errorf("error publishing curso new: %w", err)
 	}
 
-	return id, nil
+	return Id, nil
 }
 
 func (service Service) Update(ctx context.Context, curso domain.Curso) error {
 	record := model.Curso{
-		ID:        curso.Id,
+		Id:        curso.Id,
 		Nombre:    curso.Nombre,
 		Precio:    curso.Precio,
 		Profesor:  curso.Profesor,

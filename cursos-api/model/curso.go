@@ -1,7 +1,7 @@
 package model
 
 type Curso struct {
-	ID        string  `bson:"_id,omitempty"`
+	Id        string  `bson:"_id,omitempty"`
 	Nombre    string  `bson:"Nombre"`
 	Precio    float64 `bson:"Precio"`
 	Profesor  string  `bson:"Profesor"`

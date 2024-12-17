@@ -95,7 +95,7 @@ func (repository Mongo) Create(ctx context.Context, curso model.Curso) (string, 
 
 func (repository Mongo) Update(ctx context.Context, curso model.Curso) error {
 	// Convert curso ID to MongoDB ObjectID
-	objectID, err := primitive.ObjectIDFromHex(curso.ID)
+	objectID, err := primitive.ObjectIDFromHex(curso.Id)
 	if err != nil {
 		return fmt.Errorf("error converting id to mongo ID: %w", err)
 	}
@@ -103,23 +103,23 @@ func (repository Mongo) Update(ctx context.Context, curso model.Curso) error {
 	update := bson.M{}
 
 	if curso.Nombre != "" {
-		update["nombre"] = curso.Nombre
+		update["Nombre"] = curso.Nombre
 	}
 	if curso.Precio != 0 {
-		update["precio"] = curso.Precio
+		update["Precio"] = curso.Precio
 	}
 	if curso.Profesor != "" {
-		update["profesor"] = curso.Profesor
+		update["Profesor"] = curso.Profesor
 	}
 	if curso.Capacidad != 0 {
-		update["capacidad"] = curso.Capacidad
+		update["Capacidad"] = curso.Capacidad
 	}
 	if curso.Duracion != "" {
-		update["duracion"] = curso.Duracion
+		update["Duracion"] = curso.Duracion
 	}
 
 	if len(update) == 0 {
-		return fmt.Errorf("no fields to update for curso ID %s", curso.ID)
+		return fmt.Errorf("no fields to update for curso ID %s", curso.Id)
 	}
 
 	filter := bson.M{"_id": objectID}
@@ -128,7 +128,7 @@ func (repository Mongo) Update(ctx context.Context, curso model.Curso) error {
 		return fmt.Errorf("error updating document: %w", err)
 	}
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("no document found with ID %s", curso.ID)
+		return fmt.Errorf("no document found with ID %s", curso.Id)
 	}
 
 	return nil
