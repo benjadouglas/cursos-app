@@ -2,7 +2,7 @@
     import { Input } from "$lib/components/ui/input";
     import type { PageData, ActionData } from "./$types";
     import { Button } from "$lib/components/ui/button";
-    import Course from "$lib/components/ui/course/+page.svelte";
+    import Course from "$lib/components/ui/course/course.svelte";
     import { enhance } from "$app/forms";
 
     let { data, form }: { data: PageData; form: ActionData } = $props();

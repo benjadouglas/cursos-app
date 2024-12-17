@@ -22,21 +22,29 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
-    default: async ({ request, cookies }) => {
+    default: async ({ request, cookies, params }) => {
         const form = await request.formData();
+        const course_name = form.get("nombre");
+        const course_price = parseInt(form.get("precio") as string);
         const user_id = cookies.get("userId");
-        const course_id = form.get("course_id");
-        const response = await fetch("http://localhost:8085/api/enrollments", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cookies.get("session")}`,
+        const course_id = params.slug;
+
+        const response = await fetch(
+            `http://localhost:8084/cursos/${course_id}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${cookies.get("session")}`,
+                },
+                body: JSON.stringify({
+                    Nombre: course_name,
+                    Precio: course_price,
+                }),
             },
-            body: JSON.stringify({
-                id: user_id,
-                curso_id: course_id,
-            }),
-        });
+        );
+        const data = await response.json();
+        console.log(data);
         if (!response.ok) {
             return fail(500);
         }

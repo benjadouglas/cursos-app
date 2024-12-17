@@ -1,10 +1,10 @@
 <script lang="ts">
-    import Curso from "$lib/components/ui/course/course.svelte";
-    import type { Course } from "$lib/types";
+    import Curso from "$lib/components/ui/course/course_edit.svelte";
     import type { PageData } from "./$types";
-
+    import type { Course } from "$lib/types";
     let { data }: { data: PageData } = $props();
-    let courses: Course[] = data.courses;
+
+    const courses: Course[] = $derived(data.courses);
 </script>
 
 <div
@@ -15,7 +15,7 @@
             title={course.Nombre}
             price={course.Precio}
             capacity={course.Capacidad}
-            id={course.id}
+            id={course.Id}
         />
     {/each}
 </div>
