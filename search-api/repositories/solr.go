@@ -118,7 +118,7 @@ func (searchEngine Solr) Delete(ctx context.Context, id string) error {
 
 func (searchEngine Solr) Index(ctx context.Context, curso Dao.Curso) (string, error) {
 	doc := map[string]interface{}{
-		"id":        curso.Id,
+		"Id":        curso.Id,
 		"Nombre":    curso.Nombre,
 		"Precio":    curso.Precio,
 		"Profesor":  curso.Profesor,

@@ -7,6 +7,7 @@ import (
 	"usuarios-api/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -33,7 +34,7 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
-
+	logrus.Printf("%v", user)
 	// Verificar si el email ya existe
 	var existingUser model.Usuario
 	if err := db.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
@@ -119,4 +120,23 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 	c.Status(http.StatusNoContent)
+}
+
+func IsAdmin(c *gin.Context) {
+	id, is := c.Get("user_id")
+	if !is {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error getting user ID"})
+		return
+	}
+	var user model.Usuario
+	if err := db.First(&user, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+	c.Set("admin", user.Admin)
+	if !user.Admin {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"admin": user.Admin})
 }

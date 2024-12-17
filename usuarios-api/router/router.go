@@ -10,7 +10,7 @@ func MapUrls(engine *gin.Engine) {
 
 	engine.POST("/api/login", users.Login)
 	engine.POST("/api/users", users.CreateUser)
-
+	engine.POST("/api/validate", users.AuthMiddleware(), users.IsAdmin)
 	protected := engine.Group("/api")
 	protected.Use(users.AuthMiddleware())
 	{

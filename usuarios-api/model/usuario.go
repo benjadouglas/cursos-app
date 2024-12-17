@@ -5,5 +5,5 @@ type Usuario struct {
 	Nombre   string `gorm:"size:255"`
 	Email    string `gorm:"size:255"`
 	Password string `gorm:"size:255"`
-	Is_admin bool   `gorm:"default:false"`
+	Admin    bool   `gorm:"default:false"`
 }

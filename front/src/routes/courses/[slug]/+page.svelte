@@ -34,8 +34,8 @@
         </Card.Content>
         <Card.Footer class="flex justify-center">
             <form use:enhance method="POST">
-                <input type="hidden" value={course?.Id} name="course_id" />
                 <button
+                    type="submit"
                     class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
                 >
                     Enroll Now
