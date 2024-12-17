@@ -1,7 +1,7 @@
 package cursos
 
 type Curso struct {
-	Id        string  `json:"id"`
+	Id        string  `json:"Id"`
 	Nombre    string  `json:"Nombre"`
 	Precio    float64 `json:"Precio"`
 	Profesor  string  `json:"Profesor"`

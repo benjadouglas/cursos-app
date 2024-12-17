@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type Service interface {
@@ -55,6 +56,7 @@ func (controller Controller) Create(ctx *gin.Context) {
 		return
 	}
 
+	logrus.Printf("controller create: %v", curso)
 	// Create curso
 	id, err := controller.service.Create(ctx.Request.Context(), curso)
 	if err != nil {
@@ -85,7 +87,7 @@ func (controller Controller) Update(ctx *gin.Context) {
 
 	// Set the ObjectID to curso
 	curso.Id = id
-
+	logrus.Printf("%v", curso)
 	// Update curso
 	if err := controller.service.Update(ctx.Request.Context(), curso); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -97,6 +99,7 @@ func (controller Controller) Update(ctx *gin.Context) {
 	// Send response
 	ctx.JSON(http.StatusOK, gin.H{
 		"message": id,
+		"curso":   curso,
 	})
 }
 
