@@ -16,15 +16,5 @@ func ConnectDB() *gorm.DB {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
-	// var tables []string
-	// err = db.Raw("SHOW TABLES").Scan(&tables).Error
-	// if err != nil {
-	// 	log.Printf("Error querying tables: %v", err)
-	// } else {
-	// 	log.Println("Database tables:")
-	// 	for _, table := range tables {
-	// 		log.Printf("- %s", table)
-	// 	}
-	// }
 	return db
 }
