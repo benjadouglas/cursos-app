@@ -40,10 +40,10 @@
                             </DropdownMenu.Item>
                             <DropdownMenu.Item>
                                 <a
-                                    href="/admin"
+                                    href="/courses/admin"
                                     class="w-full text-sm font-normal hover:text-primary transition-colors"
                                 >
-                                    admin
+                                    Admin
                                 </a>
                             </DropdownMenu.Item>
                             <DropdownMenu.Separator />

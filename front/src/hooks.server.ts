@@ -10,7 +10,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
     if (event.url.pathname === "/login" || event.url.pathname === "/signup") {
         if (userId) {
-            throw redirect(303, "/protected");
+            throw redirect(303, "/courses");
         }
     }
 

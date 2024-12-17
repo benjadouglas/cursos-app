@@ -22,10 +22,9 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
-    default: async ({ request, cookies }) => {
+    default: async ({ request, cookies, params }) => {
         const form = await request.formData();
         const user_id = cookies.get("userId");
-        const course_id = form.get("course_id");
         const response = await fetch("http://localhost:8085/api/enrollments", {
             method: "POST",
             headers: {
@@ -34,7 +33,7 @@ export const actions = {
             },
             body: JSON.stringify({
                 id: user_id,
-                curso_id: course_id,
+                curso_id: params.slug,
             }),
         });
         if (!response.ok) {
