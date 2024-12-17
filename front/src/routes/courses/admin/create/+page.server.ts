@@ -19,7 +19,6 @@ export const actions = {
             }),
         });
         const data = await response.json();
-        console.log(data);
         if (!response.ok) {
             return fail(500);
         }

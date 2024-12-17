@@ -13,7 +13,6 @@ export const load: PageServerLoad = async ({ params }) => {
         },
     );
     const data = await response.json();
-    console.log(data);
     return {
         courses: data,
     };
