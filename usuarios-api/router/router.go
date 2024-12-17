@@ -21,7 +21,7 @@ func MapUrls(engine *gin.Engine) {
 
 		protected.POST("/enrollments", users.CreateEnrollment)
 		protected.GET("/enrollments/user/:id", users.GetEnrollmentsByUserID)
-		protected.PUT("/enrollments/:id", users.UpdateEnrollment)
+		// protected.PUT("/enrollments/:id", users.UpdateEnrollment)
 		protected.DELETE("/enrollments/:userId/:courseId", users.DeleteEnrollment)
 	}
 }

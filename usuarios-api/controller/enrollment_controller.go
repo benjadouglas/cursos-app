@@ -7,6 +7,7 @@ import (
 	"strings"
 	"usuarios-api/model"
 
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,7 @@ func CreateEnrollment(c *gin.Context) {
 		return
 	}
 
-	log.Printf("Json data %v", enrollment)
+	logrus.Printf("Json data %v", enrollment)
 	// Verificar si el usuario existe
 	var user model.Usuario
 	if err := db.First(&user, enrollment.Id).Error; err != nil {
@@ -47,8 +48,9 @@ func CreateEnrollment(c *gin.Context) {
 // GetEnrollmentsByUserID obtiene todas las inscripciones de un usuario
 func GetEnrollmentsByUserID(c *gin.Context) {
 	userID := strings.TrimSpace(c.Param("id"))
+    logrus.Printf("%s",userID)
 	userID = strings.TrimPrefix(userID, "id:") // Add this line to remove "id:" prefix
-	log.Printf("%v", userID)
+	logrus.Printf("%v", userID)
 
 	var enrollments []model.Enrollment
 	if err := db.Where("id = ?", userID).Find(&enrollments).Error; err != nil {
@@ -58,13 +60,12 @@ func GetEnrollmentsByUserID(c *gin.Context) {
 
 	courses := make([]interface{}, 0)
 	for _, enrollment := range enrollments {
-		resp, err := http.Get("http://localhost:8084/cursos/id:" + enrollment.Id_cursos)
+		resp, err := http.Get("http://localhost:8084/cursos/" + enrollment.Id_cursos)
 		if err != nil {
 			log.Printf("Error getting course: %v", err)
 			continue
 		}
 		defer resp.Body.Close()
-
 		var course interface{}
 		if err := json.NewDecoder(resp.Body).Decode(&course); err != nil {
 			log.Printf("Error decoding response: %v", err)
