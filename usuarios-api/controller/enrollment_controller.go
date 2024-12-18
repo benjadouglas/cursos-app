@@ -1,7 +1,9 @@
 package users
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -42,13 +44,42 @@ func CreateEnrollment(c *gin.Context) {
 		return
 	}
 
+	// Count total enrollments for this course
+	var count int64
+	if err := db.Model(&model.Enrollment{}).Where("id_cursos = ?", enrollment.Id_cursos).Count(&count).Error; err != nil {
+		log.Printf("Error counting enrollments: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to count enrollments"})
+		return
+	}
+
+	// Update course capacity in cursos-api
+	updateURL := fmt.Sprintf("http://localhost:8084/cursos/%s", enrollment.Id_cursos)
+	updatePayload := map[string]interface{}{
+		"Capacidad": count,
+	}
+	jsonPayload, _ := json.Marshal(updatePayload)
+
+	req, err := http.NewRequest("PUT", updateURL, bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		log.Printf("Error creating request to update course capacity: %v", err)
+	} else {
+		req.Header.Set("Content-Type", "application/json")
+		client := &http.Client{}
+		response, err := client.Do(req)
+		if err != nil {
+			log.Printf("Error updating course capacity: %v", err)
+		} else {
+			defer response.Body.Close()
+		}
+	}
+
 	c.JSON(http.StatusCreated, enrollment)
 }
 
 // GetEnrollmentsByUserID obtiene todas las inscripciones de un usuario
 func GetEnrollmentsByUserID(c *gin.Context) {
 	userID := strings.TrimSpace(c.Param("id"))
-    logrus.Printf("%s",userID)
+	logrus.Printf("%s", userID)
 	userID = strings.TrimPrefix(userID, "id:") // Add this line to remove "id:" prefix
 	logrus.Printf("%v", userID)
 
@@ -91,15 +122,44 @@ func DeleteEnrollment(c *gin.Context) {
 		return
 	}
 
-	result := db.Where("user_id = ? AND course_id = ?", userID, courseID).Delete(&model.Enrollment{})
-	if result.Error != nil {
+	// Get the enrollment first to have the course ID
+	var enrollment model.Enrollment
+	if err := db.Where("user_id = ? AND course_id = ?", userID, courseID).First(&enrollment).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Enrollment not found"})
+		return
+	}
+
+	// Delete the enrollment
+	if err := db.Delete(&enrollment).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete enrollment"})
 		return
 	}
 
-	if result.RowsAffected == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Enrollment not found"})
-		return
+	// Count remaining enrollments for this course
+	var count int64
+	if err := db.Model(&model.Enrollment{}).Where("id_cursos = ?", enrollment.Id_cursos).Count(&count).Error; err != nil {
+		log.Printf("Error counting enrollments: %v", err)
+	} else {
+		// Update course capacity in cursos-api
+		updateURL := fmt.Sprintf("http://cursos-api:8084/cursos/%s", enrollment.Id_cursos)
+		updatePayload := map[string]interface{}{
+			"Capacidad": count,
+		}
+		jsonPayload, _ := json.Marshal(updatePayload)
+
+		req, err := http.NewRequest("PUT", updateURL, bytes.NewBuffer(jsonPayload))
+		if err != nil {
+			log.Printf("Error creating request to update course capacity: %v", err)
+		} else {
+			req.Header.Set("Content-Type", "application/json")
+			client := &http.Client{}
+			response, err := client.Do(req)
+			if err != nil {
+				log.Printf("Error updating course capacity: %v", err)
+			} else {
+				defer response.Body.Close()
+			}
+		}
 	}
 
 	c.Status(http.StatusNoContent)
