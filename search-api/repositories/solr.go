@@ -56,7 +56,22 @@ func (searchEngine Solr) Search(ctx context.Context, query string, limit int, of
 }
 
 func (searchEngine Solr) Update(ctx context.Context, curso Dao.Curso) error {
+	// First, try to find the existing document ID using the curso.Id
+	query := solr.NewQuery(fmt.Sprintf("Id:\"%s\"", curso.Id))
+	queryResp, err := searchEngine.Client.Query(ctx, searchEngine.Collection, query)
+	if err != nil {
+		return fmt.Errorf("error querying existing document: %w", err)
+	}
+
+	var solrId string
+	if len(queryResp.Response.Documents) > 0 {
+		solrId = queryResp.Response.Documents[0]["id"].(string)
+	} else {
+		solrId = curso.Id
+	}
+
 	doc := map[string]interface{}{
+		"id":        solrId,
 		"Id":        curso.Id,
 		"Nombre":    curso.Nombre,
 		"Precio":    curso.Precio,
@@ -74,12 +89,12 @@ func (searchEngine Solr) Update(ctx context.Context, curso Dao.Curso) error {
 		return fmt.Errorf("error marshaling curso document: %w", err)
 	}
 
-	resp, err := searchEngine.Client.Update(ctx, searchEngine.Collection, solr.JSON, bytes.NewReader(body))
+	updateResp, err := searchEngine.Client.Update(ctx, searchEngine.Collection, solr.JSON, bytes.NewReader(body))
 	if err != nil {
 		return fmt.Errorf("error updating curso: %w", err)
 	}
-	if resp.Error != nil {
-		return fmt.Errorf("failed to update curso: %v", resp.Error)
+	if updateResp.Error != nil {
+		return fmt.Errorf("failed to update curso: %v", updateResp.Error)
 	}
 
 	if err := searchEngine.Client.Commit(ctx, searchEngine.Collection); err != nil {
@@ -117,6 +132,7 @@ func (searchEngine Solr) Delete(ctx context.Context, id string) error {
 
 func (searchEngine Solr) Index(ctx context.Context, curso Dao.Curso) (string, error) {
 	doc := map[string]interface{}{
+		"id":        curso.Id,
 		"Id":        curso.Id,
 		"Nombre":    curso.Nombre,
 		"Precio":    curso.Precio,

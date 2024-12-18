@@ -5,8 +5,6 @@ import (
 	"fmt"
 	cursoDAO "search-api/dao"
 	cursoModel "search-api/models"
-
-	"github.com/sirupsen/logrus"
 )
 
 type Repository interface {
@@ -76,7 +74,7 @@ func (service Service) HandleCursoNew(cursoNew cursoModel.CursoNew) {
 			Capacidad: curso.Capacidad,
 			Duracion:  curso.Duracion,
 		}
-		logrus.Printf("cursoDAO: %v", cursoDAO)
+		fmt.Printf("cursoDAO: %v \n", cursoDAO)
 		if cursoNew.Operation == "CREATE" {
 			if _, err := service.repository.Index(context.Background(), cursoDAO); err != nil {
 				fmt.Printf("Error indexing curso (%s): %v\n", cursoNew.CursoId, err)
