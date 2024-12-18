@@ -2,7 +2,7 @@
     import { Button } from "$lib/components/ui/button";
     import * as Card from "$lib/components/ui/card";
 
-    let { title, price, capacity, id } = $props();
+    let { title, price, capacity, maximo, id } = $props();
 </script>
 
 <Card.Root class="w-[350px]">
@@ -16,12 +16,12 @@
                 <span class="font-semibold">${price}</span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="text-muted-foreground">Capacity</span>
-                <span class="font-semibold">{capacity} students</span>
+                <span class="text-muted-foreground">Enrolled</span>
+                <span class="font-semibold">{capacity}/{maximo}</span>
             </div>
         </div>
     </Card.Content>
     <Card.Footer class="flex justify-center">
-        <Button class="w-full" href="/courses/{id}">Descrpcion</Button>
+        <Button class="w-full" href="/courses/{id}">Descripcion</Button>
     </Card.Footer>
 </Card.Root>

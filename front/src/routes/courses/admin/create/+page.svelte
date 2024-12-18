@@ -33,6 +33,18 @@
                     />
                 </div>
             </Card.Content>
+            <Card.Content class="space-y-4">
+                <div
+                    class="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                >
+                    <span class="text-gray-600 font-medium">Maximum</span>
+                    <input
+                        type="number"
+                        name="maximo"
+                        class="text-lg font-bold text-right border rounded-lg p-2 w-32"
+                    />
+                </div>
+            </Card.Content>
             <Card.Footer class="flex justify-center">
                 <input type="hidden" name="course_id" />
                 <button

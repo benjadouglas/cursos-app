@@ -5,6 +5,7 @@ export const actions = {
         const form = await request.formData();
         const course_name = form.get("nombre");
         const course_price = parseInt(form.get("precio") as string);
+        const course_max = parseInt(form.get("maximo") as string);
         const user_id = cookies.get("userId");
 
         const response = await fetch("http://localhost:8084/cursos", {
@@ -16,6 +17,7 @@ export const actions = {
             body: JSON.stringify({
                 Nombre: course_name,
                 Precio: course_price,
+                Maximo: course_max
             }),
         });
         const data = await response.json();

@@ -48,6 +48,7 @@
                         title={item.Nombre}
                         price={item.Precio}
                         capacity={item.Capacidad}
+                        maximo={item.Maximo}
                         id={item.Id}
                     />
                 {/each}

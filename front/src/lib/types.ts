@@ -3,4 +3,5 @@ export type Course = {
     Nombre: string;
     Precio: string;
     Capacidad: string;
+    Maximo: string;
 };

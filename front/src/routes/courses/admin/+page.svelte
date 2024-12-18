@@ -16,6 +16,7 @@
             price={course.Precio}
             capacity={course.Capacidad}
             id={course.Id}
+            maximo={course.Maximo}
         />
     {/each}
 </div>
