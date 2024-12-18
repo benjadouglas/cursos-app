@@ -7,6 +7,7 @@ type Curso struct {
 	Profesor  string  `json:"Profesor"`
 	Capacidad int     `json:"Capacidad"`
 	Duracion  string  `json:"Duracion"`
+	Maximo    int     `json:"Maximo"`
 }
 
 type CursoNew struct {

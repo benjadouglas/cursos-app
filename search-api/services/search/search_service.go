@@ -51,6 +51,7 @@ func (service Service) Search(ctx context.Context, query string, offset int, lim
 			Profesor:  curso.Profesor,
 			Capacidad: curso.Capacidad,
 			Duracion:  curso.Duracion,
+			Maximo:    curso.Maximo,
 		})
 	}
 
@@ -73,6 +74,7 @@ func (service Service) HandleCursoNew(cursoNew cursoModel.CursoNew) {
 			Profesor:  curso.Profesor,
 			Capacidad: curso.Capacidad,
 			Duracion:  curso.Duracion,
+			Maximo:    curso.Maximo,
 		}
 		fmt.Printf("cursoDAO: %v \n", cursoDAO)
 		if cursoNew.Operation == "CREATE" {

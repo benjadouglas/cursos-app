@@ -48,6 +48,7 @@ func (searchEngine Solr) Search(ctx context.Context, query string, limit int, of
 			Profesor:  getStringField(doc, "Profesor"),
 			Capacidad: getIntField(doc, "Capacidad"),
 			Duracion:  getStringField(doc, "Duracion"),
+			Maximo:    getIntField(doc, "Maximo"),
 		}
 		coursesList = append(coursesList, course)
 	}
@@ -78,6 +79,7 @@ func (searchEngine Solr) Update(ctx context.Context, curso Dao.Curso) error {
 		"Profesor":  curso.Profesor,
 		"Capacidad": curso.Capacidad,
 		"Duracion":  curso.Duracion,
+		"Maximo":    curso.Maximo,
 	}
 
 	updateRequest := map[string]interface{}{
@@ -139,6 +141,7 @@ func (searchEngine Solr) Index(ctx context.Context, curso Dao.Curso) (string, er
 		"Profesor":  curso.Profesor,
 		"Capacidad": curso.Capacidad,
 		"Duracion":  curso.Duracion,
+		"Maximo":    curso.Maximo,
 	}
 
 	indexRequest := map[string]interface{}{
@@ -193,9 +196,15 @@ func getIntField(doc map[string]interface{}, field string) int {
 	if val, ok := doc[field].(float64); ok {
 		return int(val)
 	}
+	if val, ok := doc[field].(int); ok {
+		return val
+	}
 	if val, ok := doc[field].([]interface{}); ok && len(val) > 0 {
 		if floatVal, ok := val[0].(float64); ok {
 			return int(floatVal)
+		}
+		if intVal, ok := val[0].(int); ok {
+			return intVal
 		}
 	}
 	return 0
