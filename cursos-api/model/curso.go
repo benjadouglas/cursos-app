@@ -7,4 +7,5 @@ type Curso struct {
 	Profesor  string  `bson:"Profesor"`
 	Capacidad int     `bson:"Capacidad"`
 	Duracion  string  `bson:"Duracion"`
+	Maximo    int     `bson:"Maximo"`
 }

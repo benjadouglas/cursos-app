@@ -42,6 +42,7 @@ func (service Service) GetCursoByID(ctx context.Context, id string) (domain.Curs
 		Profesor:  curso.Profesor,
 		Capacidad: curso.Capacidad,
 		Duracion:  curso.Duracion,
+		Maximo:    curso.Maximo,
 	}, nil
 }
 
@@ -53,6 +54,7 @@ func (service Service) Create(ctx context.Context, curso domain.Curso) (string, 
 		Profesor:  curso.Profesor,
 		Capacidad: curso.Capacidad,
 		Duracion:  curso.Duracion,
+		Maximo:    curso.Maximo,
 	}
 
 	Id, err := service.mainRepository.Create(ctx, record)
@@ -78,6 +80,7 @@ func (service Service) Update(ctx context.Context, curso domain.Curso) error {
 		Profesor:  curso.Profesor,
 		Capacidad: curso.Capacidad,
 		Duracion:  curso.Duracion,
+		Maximo:    curso.Maximo,
 	}
 	err := service.mainRepository.Update(ctx, record)
 	if err != nil {
