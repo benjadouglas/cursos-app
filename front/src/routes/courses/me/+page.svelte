@@ -15,7 +15,7 @@
             title={course.Nombre}
             price={course.Precio}
             capacity={course.Capacidad}
-            id={course.id}
+            id={course.Id}
         />
     {/each}
 </div>

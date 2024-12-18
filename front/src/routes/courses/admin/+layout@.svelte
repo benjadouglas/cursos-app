@@ -38,6 +38,11 @@
                                     MyCourses
                                 </a>
                             </DropdownMenu.Item>
+                            <DropdownMenu.Item>
+                                <a href="/courses/admin/instances" class="w-full text-sm font-medium hover:text-primary transition-colors">
+                                    Instances
+                                    </a>
+                            </DropdownMenu.Item>
                             <DropdownMenu.Separator />
                             <DropdownMenu.Item>
                                 <button
