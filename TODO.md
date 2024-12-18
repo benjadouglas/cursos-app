@@ -16,7 +16,7 @@
 - [x] Desarrollo en Go siguiendo el Patrón MVC: Los microservicios están desarrollados en Go y cumplen con el patrón MVC.
 - [x] Encriptación de Datos Sensibles: Los datos sensibles (como passwords) se manejan de forma segura, siguiendo prácticas de encriptación.
 - [x] Código en Repositorio de GitHub: Todo el código se encuentra publicado en GitHub y está accesible para revisión.
-- [!] Containerización en Docker: Todos los microservicios están containerizados en Docker y se gestionan mediante Docker Compose.
+- [x] Containerización en Docker: Todos los microservicios están containerizados en Docker y se gestionan mediante Docker Compose.
 - [!] Filtrado de Resultados por Capacidad en SolR: La API de Búsqueda implementa un filtro de resultados basado en la capacidad (usuarios inscritos vs. capacidad máxima del curso u hotel).
 
 - [ ] Implementación de Caching Eficiente: Las capas de cache implementadas, tanto en la API de Usuarios como en la API Principal, mejoran la eficiencia del sistema y funcionan de forma estable.

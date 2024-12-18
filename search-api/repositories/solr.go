@@ -30,7 +30,6 @@ func NewSolr(config SolrConfig) Solr {
 
 func (searchEngine Solr) Search(ctx context.Context, query string, limit int, offset int) ([]Dao.Curso, error) {
 
-	logrus.Printf(query)
 	solrQuery := solr.NewQuery(query).Limit(limit).Offset(offset)
 	resp, err := searchEngine.Client.Query(ctx, "courses", solrQuery)
 
