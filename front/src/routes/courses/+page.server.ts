@@ -13,8 +13,9 @@ export const load: PageServerLoad = async ({ params }) => {
         },
     );
     const data = await response.json();
+    const sortedData = data.sort((a: any, b: any) => a.Capacidad - b.Capacidad);
     return {
-        courses: data,
+        courses: sortedData,
     };
 };
 
@@ -26,7 +27,7 @@ export const actions = {
             search = "*";
         }
         const response = await fetch(
-            `http://localhost:8087/search?q=Nombre:${search}~&offset=0&limit=10000`,
+            `http://localhost:8087/search?q=Nombre:${search}*~&offset=0&limit=10000`,
             {
                 method: "GET",
                 mode: "cors",
@@ -35,11 +36,11 @@ export const actions = {
                 },
             },
         );
-
         if (!response.ok) {
             return fail(500);
         }
         const data = await response.json();
+        console.log(data);
         return {
             courses: data,
         };

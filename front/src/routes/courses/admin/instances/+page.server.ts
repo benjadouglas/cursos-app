@@ -40,7 +40,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
     try {
         const courses_response = await fetch(
-            "http://localhost:8084/cursos/6761eb462b4b4537265d3c5b",
+            "http://localhost:8084/cursos/676308c54b8ec673feb46fd5",
             {
                 method: "GET",
                 headers: {
